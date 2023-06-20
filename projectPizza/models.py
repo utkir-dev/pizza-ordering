@@ -35,3 +35,17 @@ class Pizza(models.Model):
     def __str__(self):
         for_admin=f"{self.title} {self.price} {self.created_at}"
         return for_admin
+
+class PizzaNumber(models.Model):
+    branches=models.PositiveIntegerField(default=1)
+    awards=models.PositiveIntegerField(default=1)
+    customer=models.PositiveIntegerField(default=1)
+    staff=models.PositiveIntegerField(default=1)
+
+    class Meta:
+        verbose_name="Pizza Number"
+        verbose_name_plural="Pizza Number"
+
+    def __str__(self):
+        for_admin=f"{self.branches} {self.awards} {self.customer}"
+        return for_admin
