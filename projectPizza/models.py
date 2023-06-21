@@ -1,11 +1,14 @@
 from django.db import models
+from django.urls import reverse
 # Create your models here.
 
 class Category(models.Model):
     """ Model for Category"""
     name=models.CharField(max_length=255, null=False,blank=False,unique=True,error_messages={"unique":"Bu nom allaqachon mavjud!"})
     slug=models.SlugField(max_length=255, null=False,blank=True, unique=True,error_messages={"unique":"Bu slug allaqachon mavjud!"})
-
+    
+    def get_absolute_url(self):
+        return reverse('myapp:pizza_list_by_category',args=[self.slug])
     class Meta:
         verbose_name="Category"
         verbose_name_plural="Category"
@@ -28,6 +31,10 @@ class Pizza(models.Model):
     update=models.DateTimeField(auto_now=True)
     created_at=models.DateTimeField(auto_now_add=True)
 
+    def get_absolute_url(self):
+        return reverse('myapp:pizza_detail',args=[self.id,self.slug])
+
+
     class Meta:
         verbose_name="Pizza"
         verbose_name_plural="Pizza"
@@ -42,6 +49,7 @@ class PizzaNumber(models.Model):
     customer=models.PositiveIntegerField(default=1)
     staff=models.PositiveIntegerField(default=1)
 
+
     class Meta:
         verbose_name="Pizza Number"
         verbose_name_plural="Pizza Number"
@@ -49,3 +57,23 @@ class PizzaNumber(models.Model):
     def __str__(self):
         for_admin=f"{self.branches} {self.awards} {self.customer}"
         return for_admin
+    
+class Chef(models.Model):
+    name=models.CharField(max_length=100)    
+    surname=models.CharField(max_length=100)  
+    specialist=models.CharField(max_length=100)  
+    description=models.TextField() 
+    image=models.ImageField(upload_to='chef/')
+    update=models.DateTimeField(auto_now=True)
+    created_at=models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name="Chef"
+        verbose_name_plural="Chef"
+
+    def __str__(self):
+        for_admin=f"{self.name} {self.surname} {self.specialist}"
+        return for_admin
+    
+    def full_name(self):
+        return self.name + " " + self.surname
